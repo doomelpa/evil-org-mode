@@ -895,9 +895,9 @@ Optional argument THEME list of themes. See evil-org-keytheme for a list of valu
      evil-org-mode-map)))
 
 (defun evil-org-edit-src-exit ()
-  "Save then `evil-edit-src-exit'."
+  "Save with `org-edit-src-save', then `evil-edit-src-exit'."
   (interactive)
-  (mapc #'call-interactively '(evil-write org-edit-src-exit)))
+  (mapc #'call-interactively '(org-edit-src-save org-edit-src-exit)))
 
 ;;; vim-like confirm/abort for capture and src
 ;;; Taken from mwillsey (Max Willsey) on https://github.com/syl20bnr/spacemacs/pull/7400
