@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (require 'evil-org)
 (require 'ert)
 
