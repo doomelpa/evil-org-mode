@@ -66,7 +66,7 @@
            (call-interactively target)))))
 
 (defun evil-org-agenda-set-keys ()
-  "Set motion state keys for `org-agenda'."
+  "Set motion state keys for ‘org-agenda’."
   (evil-set-initial-state 'org-agenda-mode 'motion)
 
   ;; Horizontal movements have little use, thus we can override "f" and "t".
@@ -95,8 +95,8 @@
     "gk" 'org-agenda-previous-item
     (kbd "C-j") 'org-agenda-next-item
     (kbd "C-k") 'org-agenda-previous-item
-    (kbd "[") 'org-agenda-earlier
-    (kbd "]") 'org-agenda-later
+    (kbd "[[") 'org-agenda-earlier
+    (kbd "]]") 'org-agenda-later
     "0" 'evil-org-agenda-digit-argument-or-evil-beginning-of-line
 
     ;; manipulation
@@ -112,7 +112,7 @@
     (kbd "M-j") 'org-agenda-drag-line-forward
     (kbd "M-k") 'org-agenda-drag-line-backward
     (kbd "C-S-h") 'org-agenda-todo-previousset ; Original binding "C-S-<left>"
-    (kbd "C-S-l") 'org-agenda-todo-nextset ; Original binding "C-S-<right>"
+    (kbd "C-S-l") 'org-agenda-todo-nextset     ; Original binding "C-S-<right>"
 
     ;; undo
     "u" 'org-agenda-undo
@@ -134,7 +134,7 @@
     "~" 'org-agenda-bulk-toggle-all
     "*" 'org-agenda-bulk-mark-all
     "%" 'org-agenda-bulk-mark-regexp
-    "M" 'org-agenda-bulk-remove-all-marks
+    "M" 'org-agenda-bulk-unmark-all
     "x" 'org-agenda-bulk-action
 
     ;; refresh
@@ -156,7 +156,7 @@
     ;; 'org-agenda-day-view
     ;; 'org-agenda-week-view
     ;; 'org-agenda-year-view
-    "z" 'org-agenda-view-mode-dispatch
+    "gD" 'org-agenda-view-mode-dispatch
     "ZD" 'org-agenda-dim-blocked-tasks
 
     ;; filter
@@ -169,14 +169,14 @@
     "S" 'org-agenda-filter-remove-all
 
     ;; clock
-    "I" 'org-agenda-clock-in ; Original binding
-    "O" 'org-agenda-clock-out ; Original binding
+    "I" 'org-agenda-clock-in            ; Original binding
+    "O" 'org-agenda-clock-out           ; Original binding
     "cg" 'org-agenda-clock-goto
     "cc" 'org-agenda-clock-cancel
     "cr" 'org-agenda-clockreport-mode
 
     ;; go and show
-    "." 'org-agenda-goto-today ; TODO: What about evil-repeat?
+    "." 'org-agenda-goto-today          ; TODO: What about evil-repeat?
     "gc" 'org-agenda-goto-calendar
     "gC" 'org-agenda-convert-date
     "gd" 'org-agenda-goto-date
