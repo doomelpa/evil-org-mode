@@ -66,7 +66,7 @@
            (call-interactively target)))))
 
 (defun evil-org-agenda-set-keys ()
-  "Set motion state keys for ‘org-agenda’."
+  "Set motion state keys for `org-agenda'."
   (evil-set-initial-state 'org-agenda-mode 'motion)
 
   ;; Horizontal movements have little use, thus we can override "f" and "t".

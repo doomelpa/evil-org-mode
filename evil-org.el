@@ -54,7 +54,7 @@
       '(navigation textobjects additional calendar)
     '(navigation insert textobjects additional calendar))
   "Which key themes to enable.
-If you use this variable, you should call ‘evil-org-set-key-theme’ with zero
+If you use this variable, you should call `evil-org-set-key-theme' with zero
 arguments."
   :group 'evil-org
   :type '(set (const navigation)
@@ -86,7 +86,7 @@ This can be used by non-qwerty users who don't use hjkl."
 (defcustom evil-org-special-o/O '(table-row item)
   "When o and O should be special.
 This makes them continue item lists and table rows.
-By default, o and O are bound to ‘evil-org-open-above’ and ‘evil-org-open-below’."
+By default, o and O are bound to `evil-org-open-above' and `evil-org-open-below'."
   :group 'evil-org
   :type '(set (const table-row) (const item)))
 
@@ -98,7 +98,7 @@ By default, o and O are bound to ‘evil-org-open-above’ and ‘evil-org-open-
 (defcustom evil-org-want-hybrid-shift t
   "Whether HJKL should fall back on default bindings if not on heading/item.
 This variable only takes effect when shift keytheme is enabled and should be set
-before calling ‘evil-org-set-keytheme’."
+before calling `evil-org-set-keytheme'."
   :group 'evil-org
   :type 'boolean)
 
@@ -210,8 +210,8 @@ Optional argument ARGUMENTS arguments to pass to FUN."
   (while (org-up-heading-safe)))
 
 (evil-define-motion evil-org-end-of-line (&optional n)
-  "Like ‘org-end-of-line’ but respects ‘evil-respect-visual-line-mode’.
-makes ‘org-special-ctrl-a/e’ work as well."
+  "Like `org-end-of-line' but respects `evil-respect-visual-line-mode'.
+makes `org-special-ctrl-a/e' work as well."
   (when (and org-special-ctrl-a/e
              evil-move-cursor-back
              (not evil-move-beyond-eol)
@@ -243,7 +243,7 @@ makes ‘org-special-ctrl-a/e’ work as well."
                (save-excursion
                  (end-of-line)
                  (point))))
-          ;; If ‘end-of-line’ brings us before end of line or
+          ;; If `end-of-line' brings us before end of line or
           ;; even tags, i.e., the headline spans over multiple visual
           ;; lines, move there.
           (cond
@@ -259,8 +259,8 @@ makes ‘org-special-ctrl-a/e’ work as well."
        (t (end-of-line))))))
 
 (evil-define-motion evil-org-beginning-of-line (&optional n)
-  "Like ‘org-beginning-of-line’ but respects ‘evil-respect-visual-line-mode’.
-makes ‘org-special-ctrl-a/e’ work as well."
+  "Like `org-beginning-of-line' but respects `evil-respect-visual-line-mode'.
+makes `org-special-ctrl-a/e' work as well."
   (if (not evil-respect-visual-line-mode)
       (org-beginning-of-line n)
     (let ((origin (point))
@@ -269,7 +269,7 @@ makes ‘org-special-ctrl-a/e’ work as well."
           deactivate-mark)
       ;; First move to a visible line.
       (move-beginning-of-line n)
-      ;; ‘move-beginning-of-line’ may leave point after invisible
+      ;; `move-beginning-of-line' may leave point after invisible
       ;; characters if line starts with such of these (e.g., with
       ;; a link at column 0).  Really move to the beginning of the
       ;; current visible line.
@@ -311,7 +311,7 @@ makes ‘org-special-ctrl-a/e’ work as well."
 ;;; insertion commands
 (defun evil-org-insert-line (count)
   "Insert at beginning of line.
-If ‘org-special-ctrl-a/e’ insertion will be done after heading and item markers.
+If `org-special-ctrl-a/e' insertion will be done after heading and item markers.
 The insertion will be repeated COUNT times."
   (interactive "p")
   (if (org-at-heading-or-item-p)
@@ -323,7 +323,7 @@ The insertion will be repeated COUNT times."
 
 (defun evil-org-append-line (count)
   "Append at end of line before ellipses if present.
-If ‘org-special-ctrl-a/e’ insert before tags on headlines.
+If `org-special-ctrl-a/e' insert before tags on headlines.
 The insertion will be repeated COUNT times."
   (interactive "p")
   (if (org-at-heading-p)
@@ -336,7 +336,7 @@ The insertion will be repeated COUNT times."
 (defun evil-org-open-below (count)
   "Clever insertion of org item.
 Argument COUNT number of lines to insert.
-The behavior in items and tables can be controlled using ‘evil-org-special-o/O’.
+The behavior in items and tables can be controlled using `evil-org-special-o/O'.
 Passing in any prefix argument, executes the command without special behavior."
   (interactive "P")
   (cond ((and (memq 'table-row evil-org-special-o/O) (org-at-table-p))
@@ -344,8 +344,8 @@ Passing in any prefix argument, executes the command without special behavior."
          (evil-insert nil))
         ((and (memq 'item evil-org-special-o/O) (org-at-item-p)
               ;; Fix o/O creating new list items in the middle of nested plain
-              ;; lists. Only has an effect when ‘evil-org-special-o/O' has
-              ;; ‘item’ in it (not the default).
+              ;; lists. Only has an effect when `evil-org-special-o/O' has
+              ;; `item' in it (not the default).
               (progn (org-end-of-item)
                      (backward-char 1)
                      (evil-append nil)
@@ -361,7 +361,7 @@ Passing in any prefix argument, executes the command without special behavior."
 (defun evil-org-open-above (count)
   "Clever insertion of org item.
 Argument COUNT number of lines to insert.
-The behavior in items and tables can be controlled using ‘evil-org-special-o/O’.
+The behavior in items and tables can be controlled using `evil-org-special-o/O'.
 Passing in any prefix argument, executes the command without special behavior."
   (interactive "P")
   (cond ((and (memq 'table-row evil-org-special-o/O) (org-at-table-p))
@@ -379,10 +379,10 @@ Passing in any prefix argument, executes the command without special behavior."
                (call-interactively #'indent-according-to-mode))))))
 
 (defun evil-org-return (arg)
-  "Like ‘org-return’, but continues items and tables like ‘evil-open-below’.
+  "Like `org-return', but continues items and tables like `evil-open-below'.
 Pressing return twice cancels the continuation of the itemlist or table.
 If ARG is set it will not cancel the continuation.
-The behavior of this function can be controlled using ‘evil-org-special-o/O’."
+The behavior of this function can be controlled using `evil-org-special-o/O'."
   (interactive "P")
   (cond ((and (not arg) (evil-org--empty-element-p))
          (delete-region (line-beginning-position) (line-end-position)))
@@ -417,7 +417,7 @@ The behavior of this function can be controlled using ‘evil-org-special-o/O’
 (defmacro evil-org-define-eol-command (cmd)
   "Return a function that executes CMD at eol and then enters insert state.
 eol stands for end of line.
-For many org functions such as ‘org-insert-heading’, this creates a heading below the current line."
+For many org functions such as `org-insert-heading', this creates a heading below the current line."
   (let ((newcmd (intern (concat "evil-org-" (symbol-name cmd) "-below"))))
     `(progn
        (defun ,newcmd ()
@@ -431,7 +431,7 @@ For many org functions such as ‘org-insert-heading’, this creates a heading 
 (defmacro evil-org-define-bol-command (cmd)
   "Return a function that executes CMD at bol and then enters insert state.
 bol stands for beginning of line.
-For many org functions such as ‘org-insert-heading’, this creates a heading above the current line."
+For many org functions such as `org-insert-heading', this creates a heading above the current line."
   (let ((newcmd (intern (concat "evil-org-" (symbol-name cmd) "-above"))))
     `(progn
        (defun ,newcmd ()
@@ -876,7 +876,7 @@ Includes tables, list items and subtrees."
 
 (defun evil-org-set-key-theme (&optional theme)
   "Select what keythemes to enable.
-Optional argument THEME list of themes. See ‘evil-org-key-theme’ for a list of values."
+Optional argument THEME list of themes. See `evil-org-key-theme' for a list of values."
   (let ((theme (or theme evil-org-key-theme)))
     (setq evil-org-mode-map (make-sparse-keymap))
     (evil-org--populate-base-bindings)
@@ -893,7 +893,7 @@ Optional argument THEME list of themes. See ‘evil-org-key-theme’ for a list 
     (setcdr (assq 'evil-org-mode minor-mode-map-alist evil-org-mode-map))))
 
 (defun evil-org-edit-src-exit ()
-  "Save then ‘evil-edit-src-exit’."
+  "Save then `evil-edit-src-exit'."
   (interactive)
   (mapc #'call-interactively '(evil-write org-edit-src-exit)))
 
