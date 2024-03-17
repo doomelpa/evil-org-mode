@@ -8,7 +8,7 @@
 ;; Created: 2012-06-14
 ;; Forked-since: 2017-02-12
 ;; Version: 1.0.3
-;; Package-Requires: ((emacs "24.4") (evil "1.0"))
+;; Package-Requires: ((emacs "25.1") (evil "1.0"))
 ;; Keywords: evil vim-emulation org-mode key-bindings presets
 
 ;; This file is not part of GNU Emacs
@@ -36,8 +36,10 @@
 ;;
 ;;; Code:
 (eval-when-compile
-  (require 'let-alist))
+  (require 'let-alist)
+  (require 'org-capture))
 (require 'cl-lib)
+(require 'cl-seq)
 (require 'evil)
 (require 'org)
 (require 'org-element)
@@ -565,7 +567,7 @@ Argument INCOG whether to open in incognito mode."
           ;; break from outer loop when there are no more
           ;; org links
           (when (or (not (< (point) end))
-                    (not (null org-link-search-failed)))
+                    (not (null org-link--search-failed)))
             (throw 'break 0))
           (if (not (null incog))
               (evil-org-open-incognito)
@@ -891,7 +893,7 @@ Optional argument THEME list of themes. See `evil-org-key-theme' for a list of v
     (when (memq 'todo theme) (evil-org--populate-todo-bindings))
     (when (memq 'heading theme) (evil-org--populate-heading-bindings))
     (when (memq 'calendar theme) (evil-org--populate-calendar-bindings))
-    (setcdr (assq 'evil-org-mode minor-mode-map-alist evil-org-mode-map))))
+    (setcdr (assq 'evil-org-mode minor-mode-map-alist) evil-org-mode-map)))
 
 (defun evil-org-edit-src-exit ()
   "Save then `evil-edit-src-exit'."
