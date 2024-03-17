@@ -1,4 +1,4 @@
-;;; evil-org-agenda.el --- evil keybindings for org-agenda-mode
+;;; evil-org-agenda.el --- evil keybindings for org-agenda-mode -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2012-2017 by Somelauw
 ;; Maintainer: Somelauw
@@ -95,8 +95,8 @@
     "gk" 'org-agenda-previous-item
     (kbd "C-j") 'org-agenda-next-item
     (kbd "C-k") 'org-agenda-previous-item
-    (kbd "[") 'org-agenda-earlier
-    (kbd "]") 'org-agenda-later
+    (kbd "[[") 'org-agenda-earlier
+    (kbd "]]") 'org-agenda-later
     "0" 'evil-org-agenda-digit-argument-or-evil-beginning-of-line
 
     ;; manipulation
@@ -134,7 +134,7 @@
     "~" 'org-agenda-bulk-toggle-all
     "*" 'org-agenda-bulk-mark-all
     "%" 'org-agenda-bulk-mark-regexp
-    "M" 'org-agenda-bulk-remove-all-marks
+    "M" 'org-agenda-bulk-unmark-all
     "x" 'org-agenda-bulk-action
 
     ;; refresh
@@ -156,7 +156,7 @@
     ;; 'org-agenda-day-view
     ;; 'org-agenda-week-view
     ;; 'org-agenda-year-view
-    "z" 'org-agenda-view-mode-dispatch
+    "gD" 'org-agenda-view-mode-dispatch
     "ZD" 'org-agenda-dim-blocked-tasks
 
     ;; filter

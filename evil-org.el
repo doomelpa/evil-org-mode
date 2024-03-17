@@ -1,4 +1,4 @@
-;;; evil-org.el --- evil keybindings for org-mode
+;;; evil-org.el --- evil keybindings for org-mode -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2012-2017 by Somelauw
 ;; Maintainer: Somelauw
@@ -7,8 +7,8 @@
 ;; Git-Repository: git://github.com/Somelauw/evil-org-mode.git
 ;; Created: 2012-06-14
 ;; Forked-since: 2017-02-12
-;; Version: 1.0.2
-;; Package-Requires: ((emacs "24.4") (evil "1.0"))
+;; Version: 1.0.3
+;; Package-Requires: ((emacs "25.1") (evil "1.0"))
 ;; Keywords: evil vim-emulation org-mode key-bindings presets
 
 ;; This file is not part of GNU Emacs
@@ -36,8 +36,10 @@
 ;;
 ;;; Code:
 (eval-when-compile
-  (require 'let-alist))
+  (require 'let-alist)
+  (require 'org-capture))
 (require 'cl-lib)
+(require 'cl-seq)
 (require 'evil)
 (require 'org)
 (require 'org-element)
@@ -86,7 +88,7 @@ This can be used by non-qwerty users who don't use hjkl."
 (defcustom evil-org-special-o/O '(table-row item)
   "When o and O should be special.
 This makes them continue item lists and table rows.
-By default, o and O are bound to ‘evil-org-open-above’ and ‘evil-org-open-below’."
+By default, o and O are bound to `evil-org-open-above' and `evil-org-open-below'."
   :group 'evil-org
   :type '(set (const table-row) (const item)))
 
@@ -125,7 +127,7 @@ before calling `evil-org-set-keytheme'."
   "Go to end of line and call provided function.
 FUN function callback
 Optional argument ARGUMENTS arguments to pass to FUN."
-  (obsolete 'evil-org-define-bol-command "0.9.4")
+  (declare (obsolete 'evil-org-define-eol-command "0.9.4"))
   (end-of-visible-line)
   (apply fun arguments)
   (evil-insert nil))
@@ -134,7 +136,7 @@ Optional argument ARGUMENTS arguments to pass to FUN."
   "Go to beginning of line and call provided function.
 FUN function callback
 Optional argument ARGUMENTS arguments to pass to FUN."
-  (obsolete 'evil-org-define-bol-command "0.9.4")
+  (declare (obsolete 'evil-org-define-bol-command "0.9.4"))
   (beginning-of-line)
   (apply fun arguments)
   (evil-insert nil))
@@ -311,7 +313,7 @@ makes `org-special-ctrl-a/e' work as well."
 ;;; insertion commands
 (defun evil-org-insert-line (count)
   "Insert at beginning of line.
-If ‘org-special-ctrl-a/e’ insertion will be done after heading and item markers.
+If `org-special-ctrl-a/e' insertion will be done after heading and item markers.
 The insertion will be repeated COUNT times."
   (interactive "p")
   (if (org-at-heading-or-item-p)
@@ -323,7 +325,7 @@ The insertion will be repeated COUNT times."
 
 (defun evil-org-append-line (count)
   "Append at end of line before ellipses if present.
-If ‘org-special-ctrl-a/e’ insert before tags on headlines.
+If `org-special-ctrl-a/e' insert before tags on headlines.
 The insertion will be repeated COUNT times."
   (interactive "p")
   (if (org-at-heading-p)
@@ -336,7 +338,7 @@ The insertion will be repeated COUNT times."
 (defun evil-org-open-below (count)
   "Clever insertion of org item.
 Argument COUNT number of lines to insert.
-The behavior in items and tables can be controlled using ‘evil-org-special-o/O’.
+The behavior in items and tables can be controlled using `evil-org-special-o/O'.
 Passing in any prefix argument, executes the command without special behavior."
   (interactive "P")
   (cond ((and (memq 'table-row evil-org-special-o/O) (org-at-table-p))
@@ -361,7 +363,7 @@ Passing in any prefix argument, executes the command without special behavior."
 (defun evil-org-open-above (count)
   "Clever insertion of org item.
 Argument COUNT number of lines to insert.
-The behavior in items and tables can be controlled using ‘evil-org-special-o/O’.
+The behavior in items and tables can be controlled using `evil-org-special-o/O'.
 Passing in any prefix argument, executes the command without special behavior."
   (interactive "P")
   (cond ((and (memq 'table-row evil-org-special-o/O) (org-at-table-p))
@@ -382,7 +384,7 @@ Passing in any prefix argument, executes the command without special behavior."
   "Like `org-return', but continues items and tables like `evil-open-below'.
 Pressing return twice cancels the continuation of the itemlist or table.
 If ARG is set it will not cancel the continuation.
-The behavior of this function can be controlled using `evil-org-special-o/O’."
+The behavior of this function can be controlled using `evil-org-special-o/O'."
   (interactive "P")
   (cond ((and (not arg) (evil-org--empty-element-p))
          (delete-region (line-beginning-position) (line-end-position)))
@@ -400,7 +402,7 @@ The behavior of this function can be controlled using `evil-org-special-o/O’."
                 (row (nth (1- (org-table-current-line)) rows)))
            (cl-every 'string-empty-p row)))
         ((org-at-item-p)
-         (string-match-p "^[[:space:]]*\\([+-]\\|[1-9]+\\.\\)[[:space:]]*\\(::[[:space:]]*\\)?$"
+         (string-match-p "^[[:space:]]*\\([+-]\\|[[:digit:]]+[.)]\\)[[:space:]]*\\(::[[:space:]]*\\)?$"
                          (thing-at-point 'line)))))
 
 ;; other
@@ -514,7 +516,7 @@ Argument END, second column
 If ARG > 0, move column BEG to END.
 If ARG < 0, move column END to BEG"
   (let* ((text (buffer-substring beg end))
-         (n-cells-selected (max 1 (count ?| text)))
+         (n-cells-selected (max 1 (cl-count ?| text)))
          (n-columns-to-move (* n-cells-selected (abs arg)))
          (move-left-p (< arg 0)))
     (goto-char (if move-left-p end beg))
@@ -565,7 +567,7 @@ Argument INCOG whether to open in incognito mode."
           ;; break from outer loop when there are no more
           ;; org links
           (when (or (not (< (point) end))
-                    (not (null org-link-search-failed)))
+                    (not (null org-link--search-failed)))
             (throw 'break 0))
           (if (not (null incog))
               (evil-org-open-incognito)
@@ -736,6 +738,7 @@ Includes tables, list items and subtrees."
 (defun evil-org--populate-base-bindings ()
   "Bindings that are always available."
   (evil-define-key 'motion evil-org-mode-map
+    (kbd "0") #'evil-org-beginning-of-line
     (kbd "$") #'evil-org-end-of-line
     (kbd ")") #'evil-org-forward-sentence
     (kbd "(") #'evil-org-backward-sentence
@@ -756,7 +759,7 @@ Includes tables, list items and subtrees."
   (evil-define-key '(normal visual) evil-org-mode-map
     (kbd "TAB") #'org-cycle
     (kbd "<tab>") #'org-cycle
-    (kbd "<S-tab>") #'org-shifttab
+    (kbd "<backtab>") #'org-shifttab
     (kbd "<") #'evil-org-<
     (kbd ">") #'evil-org->))
 
@@ -812,10 +815,10 @@ Includes tables, list items and subtrees."
   "Shift bindings that conflict with evil bindings."
   (let-alist evil-org-movement-bindings
     (evil-define-key 'normal evil-org-mode-map
-      (capitalize .left) 'org-shiftleft
-      (capitalize .right) 'org-shiftright
-      (capitalize .down) 'org-shiftdown
-      (capitalize .up) 'org-shiftup)
+      (capitalize .left) #'org-shiftleft
+      (capitalize .right) #'org-shiftright
+      (capitalize .down) #'org-shiftdown
+      (capitalize .up) #'org-shiftup)
 
     ;; Make shift keys fall back on the keys they have replaced
     (when evil-org-want-hybrid-shift
@@ -876,7 +879,7 @@ Includes tables, list items and subtrees."
 
 (defun evil-org-set-key-theme (&optional theme)
   "Select what keythemes to enable.
-Optional argument THEME list of themes. See evil-org-keytheme for a list of values."
+Optional argument THEME list of themes. See `evil-org-key-theme' for a list of values."
   (let ((theme (or theme evil-org-key-theme)))
     (setq evil-org-mode-map (make-sparse-keymap))
     (evil-org--populate-base-bindings)
@@ -890,9 +893,7 @@ Optional argument THEME list of themes. See evil-org-keytheme for a list of valu
     (when (memq 'todo theme) (evil-org--populate-todo-bindings))
     (when (memq 'heading theme) (evil-org--populate-heading-bindings))
     (when (memq 'calendar theme) (evil-org--populate-calendar-bindings))
-    (setcdr
-     (assq 'evil-org-mode minor-mode-map-alist)
-     evil-org-mode-map)))
+    (setcdr (assq 'evil-org-mode minor-mode-map-alist) evil-org-mode-map)))
 
 (defun evil-org-edit-src-exit ()
   "Save then `evil-edit-src-exit'."

@@ -10,6 +10,7 @@ From version 1.3 it was taken over by Somelauw.
 See [[file:doc/changelog.org][changelog]] for a history of changes.
 
 ** Features
+
  - normal, visual and insert mode bindings
  - key bindings organised in key themes
  - operators like > and < to work on headings
@@ -68,7 +69,7 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
      |-------------------------+-------------------------+-----------------------------------------------------------------------------------|
      | Evil key                | Emacs key               | explanation                                                                       |
      |-------------------------+-------------------------+-----------------------------------------------------------------------------------|
-     | <tab>, S-<return>       | <tab>                   | go to the corresponding entry at point                                            |
+     | TAB, S-<return>         | TAB                     | go to the corresponding entry at point                                            |
      | <return>                | <return>                | go to the Org mode file which contains the item at point                          |
      | M-<return>              | L                       | Display Org file and center around the item                                       |
      | <space>                 | <space>                 | scroll up                                                                         |
@@ -101,10 +102,10 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
      | gR                      | g                       | refresh all agendas                                                               |
      | ZQ                      | x                       | exit agenda                                                                       |
      | ZZ                      | Q                       | quit agenda                                                                       |
-     | z                       | v                       | tweak display (deadlines, diary, follow/log-mode, entry text, grid, day/week/year |
+     | gD                      | v                       | tweak display (deadlines, diary, follow/log-mode, entry text, grid, day/week/year |
      | ZD                      | #                       | dim blocked tasks                                                                 |
      | sc, sr, se, st, s^      | <, =, _, /, ^           | filter by category, regexp, effort, tag, top headline                             |
-     | su                      | \vert                   | remove all filters                                                                |
+     | S                       | \vert                   | remove all filters                                                                |
      | ss                      | ~                       | filter/limit interactively                                                        |
      | I                       | I                       | clock in                                                                          |
      | O                       | O                       | clock out                                                                         |
@@ -130,15 +131,16 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
 ** Installation
 
 *** Manual installation
+
     #+BEGIN_SRC sh
-    mkdir -p ~/.emacs.d/plugins; git clone
-    git://github.com/somelauw/evil-org.git ~/.emacs.d/plugins/evil-org
+    mkdir -p ~/.emacs.d/plugins; git clone \
+    git://github.com/somelauw/evil-org-mode.git ~/.emacs.d/plugins/evil-org-mode
     #+END_SRC
 
 **** Configuration emacs.el
 
     #+BEGIN_SRC emacs-lisp
-    (add-to-list 'load-path "~/.emacs.d/plugins/evil-org")
+    (add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
     (require 'evil-org)
     (add-hook 'org-mode-hook 'evil-org-mode)
     (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
@@ -152,15 +154,15 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
     #+END_SRC
 
 *** Installation by use-package
+
     #+BEGIN_SRC emacs-lisp
     (use-package evil-org
       :ensure t
       :after org
+      :hook ((org-mode . evil-org-mode)
+             (org-agenda-mode . evil-org-agenda-mode))
       :config
-      (add-hook 'org-mode-hook 'evil-org-mode)
-      (add-hook 'evil-org-mode-hook
-                (lambda ()
-                  (evil-org-set-key-theme)))
+      (evil-org-set-key-theme)
       (require 'evil-org-agenda)
       (evil-org-agenda-set-keys))
     #+END_SRC
