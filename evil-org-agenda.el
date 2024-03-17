@@ -112,7 +112,7 @@
     (kbd "M-j") 'org-agenda-drag-line-forward
     (kbd "M-k") 'org-agenda-drag-line-backward
     (kbd "C-S-h") 'org-agenda-todo-previousset ; Original binding "C-S-<left>"
-    (kbd "C-S-l") 'org-agenda-todo-nextset     ; Original binding "C-S-<right>"
+    (kbd "C-S-l") 'org-agenda-todo-nextset ; Original binding "C-S-<right>"
 
     ;; undo
     "u" 'org-agenda-undo
@@ -169,14 +169,14 @@
     "S" 'org-agenda-filter-remove-all
 
     ;; clock
-    "I" 'org-agenda-clock-in            ; Original binding
-    "O" 'org-agenda-clock-out           ; Original binding
+    "I" 'org-agenda-clock-in ; Original binding
+    "O" 'org-agenda-clock-out ; Original binding
     "cg" 'org-agenda-clock-goto
     "cc" 'org-agenda-clock-cancel
     "cr" 'org-agenda-clockreport-mode
 
     ;; go and show
-    "." 'org-agenda-goto-today          ; TODO: What about evil-repeat?
+    "." 'org-agenda-goto-today ; TODO: What about evil-repeat?
     "gc" 'org-agenda-goto-calendar
     "gC" 'org-agenda-convert-date
     "gd" 'org-agenda-goto-date
