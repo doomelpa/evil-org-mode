@@ -148,6 +148,7 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
     (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys)
+    (add-hook 'org-agenda-mode-hook #'evil-org-agenda-mode)
     #+END_SRC
 
     Or you can customize =evil-org-key-theme= and replace the last line by:
@@ -160,10 +161,14 @@ See [[file:doc/changelog.org][changelog]] for a history of changes.
     (use-package evil-org
       :ensure t
       :after org
-      :hook (org-mode . (lambda () evil-org-mode))
+      :hook (org-mode . evil-org-mode)
       :config
       (require 'evil-org-agenda)
       (evil-org-agenda-set-keys))
+
+    (use-package evil-org-agenda
+      :hook (org-agenda-mode . evil-org-agenda-mode))
+
     #+END_SRC
 
     For a more elaborate setup, take a look at [[file:doc/example_config.el][this example]].
