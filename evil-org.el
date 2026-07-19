@@ -261,7 +261,7 @@ makes `org-special-ctrl-a/e' work as well."
 (evil-define-motion evil-org-beginning-of-line (&optional n)
   "Like `org-beginning-of-line' but respects `evil-respect-visual-line-mode'.
 makes `org-special-ctrl-a/e' work as well."
-  (if (not evil-respect-visual-line-mode)
+  (if evil-respect-visual-line-mode
       (org-beginning-of-line n)
     (let ((origin (point))
           (special (pcase org-special-ctrl-a/e
